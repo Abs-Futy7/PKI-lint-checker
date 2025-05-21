@@ -53,6 +53,11 @@ Or download binaries from the [ZLint releases page](https://github.com/zmap/zlin
     - Display detailed certificate information using OpenSSL.
 
 ---
+## Screenshot
+
+![Certificate Linting & Trust Verification Example](./assets/cert_lint_example.png)
+
+---
 
 ## Example Output
 
