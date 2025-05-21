@@ -1,16 +1,6 @@
 # Certificate Linting & Inspection Tool
 
-This Python script helps you **lint**, **inspect**, and **verify trust** for X.509 certificates using [ZLint](https://github.com/zmap/zlint) and [OpenSSL](https://www.openssl.org/). It checks if your certificate is in PEM format, runs ZLint for compliance checks, displays detailed certificate information, and verifies the certificate's trust chain using a provided CA bundle.
-
----
-
-## Features
-
-- **PEM format check**: Ensures only PEM certificates are processed by checking the file's contents.
-- **ZLint summary**: Runs `zlint -summary` for standards compliance.
-- **Certificate details**: Uses OpenSSL to show subject, issuer, validity, and extensions.
-- **Trust verification**: Verifies the certificate against a root CA or CA bundle using OpenSSL.
-- **User guidance**: Helps convert DER to PEM if needed.
+This Python script helps you **lint**, **inspect**, and **verify trust** for certificates using [ZLint](https://github.com/zmap/zlint) and [OpenSSL](https://www.openssl.org/). It checks if your certificate is in PEM format, runs ZLint for compliance checks, displays detailed certificate information, and verifies the certificate's trust chain using a provided CA bundle.
 
 ---
 
