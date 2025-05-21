@@ -1,9 +1,18 @@
 # Certificate Linting & Inspection Tool
 
-This Python script helps you **lint** and **inspect** certificates using [ZLint](https://github.com/zmap/zlint) and [OpenSSL](https://www.openssl.org/). It checks if your certificate is in PEM format (by examining the file, e.g., `filename.ext`), runs ZLint for compliance checks, and displays detailed certificate information.
+This Python script helps you **lint**, **inspect**, and **verify trust** for X.509 certificates using [ZLint](https://github.com/zmap/zlint) and [OpenSSL](https://www.openssl.org/). It checks if your certificate is in PEM format, runs ZLint for compliance checks, displays detailed certificate information, and verifies the certificate's trust chain using a provided CA bundle.
 
 ---
 
+## Features
+
+- **PEM format check**: Ensures only PEM certificates are processed by checking the file's contents.
+- **ZLint summary**: Runs `zlint -summary` for standards compliance.
+- **Certificate details**: Uses OpenSSL to show subject, issuer, validity, and extensions.
+- **Trust verification**: Verifies the certificate against a root CA or CA bundle using OpenSSL.
+- **User guidance**: Helps convert DER to PEM if needed.
+
+---
 
 ## Installation
 
@@ -46,24 +55,39 @@ Or download binaries from the [ZLint releases page](https://github.com/zmap/zlin
     ```sh
     python cert_lint.py
     ```
-3. Enter the path to your certificate file (e.g., `filename.ext`) when prompted. The script will check whether the file is already in PEM format.
+3. Enter the path to your certificate file (e.g., `filename.pem`) when prompted. The script will check whether the file is in PEM format.
+4. If the certificate is in PEM format, the script will:
+    - Run ZLint and display a summary report.
+    - Prompt for the path to a root CA or CA bundle file (e.g., `root.pem` or `ca-bundle.crt`).
+    - Verify the certificate's trust chain using the provided CA bundle.
+    - Display detailed certificate information using OpenSSL.
 
 ---
 
 ## Example Output
 
 ```
-📥 Enter the path to the certificate file (.cer, .pem, etc.): filename.ext
-
-🔍 Checking if 'filename.ext' is in PEM format...
+Enter the path to the certificate file (.cer, .pem, etc.): filename.pem
 
 📋 ZLint Summary Report:
 
 ... (ZLint output) ...
 
-📄 Certificate Details:
+🔍 Enter the path to the root CA (e.g., root.pem or ca-bundle.crt): ca-bundle.crt
+
+🔐 Certificate Trust Check:
+filename.pem: OK
+
+Certificate Details:
 
 ... (OpenSSL output) ...
+```
+
+If the certificate is not in PEM format:
+```
+❌ Only PEM format certificates are supported.
+👉 To convert a DER (.cer/.der) certificate to PEM, use:
+   openssl x509 -inform DER -in "your_cert.cer" -out "converted_cert.pem" -outform PEM
 ```
 
 ---
@@ -75,6 +99,7 @@ Or download binaries from the [ZLint releases page](https://github.com/zmap/zlin
     ```sh
     openssl x509 -inform DER -in "your_cert.cer" -out "converted_cert.pem" -outform PEM
     ```
+- You must provide a valid root CA or CA bundle file to verify certificate trust.
 
 ---
 

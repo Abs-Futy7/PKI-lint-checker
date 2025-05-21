@@ -33,13 +33,30 @@ def show_certificate_details(cert_path):
             ["openssl", "x509", "-in", cert_path, "-text", "-noout"],
             capture_output=True, text=True, check=True
         )
-        print("\n📄 Certificate Details:\n")
+        print("\nCertificate Details:\n")
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print("Error showing certificate details:", e.stderr)
 
+def verify_certificate_trust(cert_path, ca_bundle_path):
+    if not os.path.isfile(ca_bundle_path):
+        print("❌ CA bundle file not found. Cannot verify trust.")
+        return
+
+    try:
+        result = subprocess.run(
+            ["openssl", "verify", "-CAfile", ca_bundle_path, cert_path],
+            capture_output=True, text=True, check=True
+        )
+        print("\n🔐 Certificate Trust Check:")
+        print(result.stdout.strip())
+    except subprocess.CalledProcessError as e:
+        print("\nCertificate trust verification failed:")
+        print(e.stderr.strip() or e.stdout.strip())
+
 if __name__ == "__main__":
     cert_file = input("Enter the path to the certificate file (.cer, .pem, etc.): ").strip()
+
     if not pem_format(cert_file):
         print("❌ Only PEM format certificates are supported.")
         print('👉 To convert a DER (.cer/.der) certificate to PEM, use:')
@@ -48,4 +65,5 @@ if __name__ == "__main__":
         summary = lint_certificate(cert_file)
         if summary:
             display_summary(summary)
-        show_certificate_details(cert_file)
+        ca_bundle = input("\n🔍 Enter the path to the root CA (e.g., root.pem or ca-bundle.crt): ").strip()
+        verify_certificate_trust(cert_file, ca_bundle)
